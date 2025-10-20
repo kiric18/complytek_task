@@ -1,0 +1,6 @@
+@Complytek.EmployeeManagement.Api_HostAddress = http://localhost:5116
+
+GET {{Complytek.EmployeeManagement.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
