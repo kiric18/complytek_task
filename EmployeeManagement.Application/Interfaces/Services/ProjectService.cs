@@ -32,9 +32,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
                 Id = p.Id,
                 Name = p.Name,
                 Budget = p.Budget,
-                ProjectCode = p.Code,
-                DepartmentId = p.DepartmentId.Value,
-                DepartmentName = p.Department.Name
+                ProjectCode = p.ProjectCode
             });
         }
 
@@ -50,18 +48,13 @@ namespace EmployeeManagement.Application.Interfaces.Services
                 Id = project.Id,
                 Name = project.Name,
                 Budget = project.Budget,
-                ProjectCode = project.Code,
-                DepartmentId = project.DepartmentId.Value,
-                DepartmentName = project.Department.Name
+                ProjectCode = project.ProjectCode
             };
         }
 
         // Implements Bonus Task 1: Transaction-based project creation
         public async Task<ProjectDto> CreateAsync(CreateProjectDto dto)
         {
-            if (!await _unitOfWork.Departments.ExistsAsync(dto.DepartmentId))
-                throw new NotFoundException(nameof(Department), dto.DepartmentId);
-
             try
             {
                 // Begin transaction
@@ -72,8 +65,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
                 {
                     Name = dto.Name,
                     Budget = dto.Budget,
-                    DepartmentId = dto.DepartmentId,
-                    Code = "TEMP" // Temporary code
+                    ProjectCode = "TEMP" // Temporary code
                 };
 
                 await _unitOfWork.Projects.AddAsync(project);
@@ -83,7 +75,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
                 var randomString = await _randomStringGenerator.GenerateRandomStringAsync(8);
 
                 // Step 3: Append ProjectId to the generated code
-                project.Code = $"{randomString}-{project.Id}";
+                project.ProjectCode = $"{randomString}-{project.Id}";
 
                 await _unitOfWork.Projects.UpdateAsync(project);
                 await _unitOfWork.SaveChangesAsync();
@@ -99,9 +91,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
                     Id = project!.Id,
                     Name = project.Name,
                     Budget = project.Budget,
-                    ProjectCode = project.Code,
-                    DepartmentId = project.DepartmentId.Value,
-                    DepartmentName = project.Department.Name
+                    ProjectCode = project.ProjectCode
                 };
             }
             catch (Exception)
@@ -119,12 +109,8 @@ namespace EmployeeManagement.Application.Interfaces.Services
             if (project == null)
                 throw new NotFoundException(nameof(Project), id);
 
-            if (!await _unitOfWork.Departments.ExistsAsync(dto.DepartmentId))
-                throw new NotFoundException(nameof(Department), dto.DepartmentId);
-
             project.Name = dto.Name;
             project.Budget = dto.Budget;
-            project.DepartmentId = dto.DepartmentId;
             // Note: ProjectCode is not updated as it's unique and system-generated
 
             await _unitOfWork.Projects.UpdateAsync(project);

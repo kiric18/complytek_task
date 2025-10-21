@@ -132,7 +132,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             {
                 ProjectId = ep.ProjectId,
                 ProjectName = ep.Project.Name,
-                ProjectCode = ep.Project.Code,
+                ProjectCode = ep.Project.ProjectCode,
                 Role = ep.Role
             });
         }

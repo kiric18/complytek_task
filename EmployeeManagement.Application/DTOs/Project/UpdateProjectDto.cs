@@ -8,6 +8,5 @@ namespace EmployeeManagement.Application.DTOs.Project
         public string Name { get; set; } = string.Empty;
         [Required]
         public decimal Budget { get; set; }
-        public int DepartmentId { get; set; }
     }
 }

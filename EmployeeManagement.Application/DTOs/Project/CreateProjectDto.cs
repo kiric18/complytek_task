@@ -9,6 +9,5 @@ namespace EmployeeManagement.Application.DTOs.Project
 
         [Required]
         public decimal Budget { get; set; }
-        public int DepartmentId { get; set; }
     }
 }
