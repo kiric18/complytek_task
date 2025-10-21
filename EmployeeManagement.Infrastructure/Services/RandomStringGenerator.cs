@@ -1,5 +1,4 @@
 ﻿using EmployeeManagement.Core.Interfaces;
-using EmployeeManagement.Core.Settings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -15,43 +14,29 @@ namespace EmployeeManagement.Infrastructure.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<RandomStringGenerator> _logger;
-        private readonly RandomOrgSettings _settings;
 
-        public RandomStringGenerator(HttpClient httpClient, ILogger<RandomStringGenerator> logger, IOptions<RandomOrgSettings> options)
+        public RandomStringGenerator(HttpClient httpClient, ILogger<RandomStringGenerator> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
-            _settings = options.Value;
         }
 
         public async Task<string> GenerateRandomStringAsync(int length = 8)
         {
             try
             {
-                var url = _settings.ApiUrl;
-
                 var requestBody = new
                 {
-                    jsonrpc = "2.0",
-                    method = "generateStrings",
-                    @params = new
-                    {
-                        apiKey = "00000000-0000-0000-0000-000000000000",
-                        n = 1,
-                        length = length,
-                        characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-                        replacement = true
-                    },
-                    id = 1
+                    codesToGenerate = 1,
+                    onlyUniques = true,
+                    prefix = "PRJ-",
+                    suffix = $"-{DateTime.Now.Year}",
+                    charactersSets = new[] { "\\w", "\\w", "\\w", "\\w", "\\w", "\\w"}
                 };
 
-                var content = new StringContent(
-                    JsonSerializer.Serialize(requestBody),
-                    System.Text.Encoding.UTF8,
-                    "application/json"
-                );
+                var content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PostAsync(url, content);
+                var response = await _httpClient.PostAsync(_httpClient.BaseAddress, content);
 
                 if (!response.IsSuccessStatusCode)
                 {
