@@ -4,9 +4,9 @@ namespace EmployeeManagement.Core.Entities
 {
     public class EmployeeProject
     {
-        public int EmployeeId { get; set; }
+        public Guid EmployeeId { get; set; }
 
-        public int ProjectId { get; set; }
+        public Guid ProjectId { get; set; }
         [Required]
         [MaxLength(100)]
         public string Role { get; set; } = null!;

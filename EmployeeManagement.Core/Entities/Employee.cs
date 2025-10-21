@@ -7,7 +7,7 @@ namespace EmployeeManagement.Core.Entities
     /// </summary>
     public class Employee
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -25,7 +25,7 @@ namespace EmployeeManagement.Core.Entities
         public decimal Salary { get; set; }
 
         // Foreign key to Department
-        public int DepartmentId { get; set; }
+        public Guid DepartmentId { get; set; }
         public Department? Department { get; set; }
 
         // Navigation property for many-to-many relation with Project

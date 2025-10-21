@@ -25,7 +25,7 @@ namespace EmployeeManagement.Infrastructure.Repositories
             return await _dbSet.ToListAsync();
         }
 
-        public virtual async Task<T?> GetByIdAsync(int id)
+        public virtual async Task<T?> GetByIdAsync(Guid id)
         {
             return await _dbSet.FindAsync(id);
         }
@@ -48,7 +48,7 @@ namespace EmployeeManagement.Infrastructure.Repositories
             await Task.CompletedTask;
         }
 
-        public virtual async Task<bool> ExistsAsync(int id)
+        public virtual async Task<bool> ExistsAsync(Guid id)
         {
             var entity = await _dbSet.FindAsync(id);
             return entity != null;

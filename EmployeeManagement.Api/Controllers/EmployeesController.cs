@@ -25,7 +25,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpGet("get/{id}")]
-        public async Task<ActionResult<EmployeeDto>> GetById(int id)
+        public async Task<ActionResult<EmployeeDto>> GetById(Guid id)
         {
             var employee = await _employeeService.GetByIdAsync(id);
             return Ok(employee);
@@ -39,21 +39,21 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> Update(int id, UpdateEmployeeDto dto)
+        public async Task<IActionResult> Update(Guid id, UpdateEmployeeDto dto)
         {
             await _employeeService.UpdateAsync(id, dto);
             return NoContent();
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             await _employeeService.DeleteAsync(id);
             return NoContent();
         }
 
         [HttpGet("{id}/projects")]
-        public async Task<ActionResult<IEnumerable<EmployeeProjectDto>>> GetProjects(int id)
+        public async Task<ActionResult<IEnumerable<EmployeeProjectDto>>> GetProjects(Guid id)
         {
             var projects = await _employeeService.GetEmployeeProjectsAsync(id);
             return Ok(projects);

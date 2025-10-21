@@ -13,6 +13,6 @@ namespace EmployeeManagement.Application.DTOs.Employee
         [Required]
         public decimal Salary { get; set; }
         [Required]
-        public int DepartmentId { get; set; }
+        public Guid DepartmentId { get; set; }
     }
 }

@@ -23,14 +23,14 @@ namespace EmployeeManagement.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public override async Task<Employee?> GetByIdAsync(int id)
+        public override async Task<Employee?> GetByIdAsync(Guid id)
         {
             return await _context.Employees
                 .Include(e => e.Department)
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<bool> EmailExistsAsync(string email, int? excludeId = null)
+        public async Task<bool> EmailExistsAsync(string email, Guid? excludeId = null)
         {
             var query = _context.Employees.Where(e => e.Email == email);
 
@@ -42,7 +42,7 @@ namespace EmployeeManagement.Infrastructure.Repositories
             return await query.AnyAsync();
         }
 
-        public async Task<IEnumerable<EmployeeProject>> GetEmployeeProjectsAsync(int employeeId)
+        public async Task<IEnumerable<EmployeeProject>> GetEmployeeProjectsAsync(Guid employeeId)
         {
             return await _context.EmployeeProjects
                 .Include(ep => ep.Project)

@@ -23,7 +23,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpGet("get/{id}")]
-        public async Task<ActionResult<ProjectDto>> GetById(int id)
+        public async Task<ActionResult<ProjectDto>> GetById(Guid id)
         {
             var project = await _projectService.GetByIdAsync(id);
             return Ok(project);
@@ -37,14 +37,14 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> Update(int id, UpdateProjectDto dto)
+        public async Task<IActionResult> Update(Guid id, UpdateProjectDto dto)
         {
             await _projectService.UpdateAsync(id, dto);
             return NoContent();
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             await _projectService.DeleteAsync(id);
             return NoContent();
@@ -58,7 +58,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpDelete("{projectId}/employees/{employeeId}")]
-        public async Task<IActionResult> RemoveEmployee(int projectId, int employeeId)
+        public async Task<IActionResult> RemoveEmployee(Guid projectId, Guid employeeId)
         {
             await _projectService.RemoveEmployeeAsync(projectId, employeeId);
             return Ok(new { message = "Employee successfully removed from project." });

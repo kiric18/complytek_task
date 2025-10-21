@@ -2,8 +2,8 @@
 {
     public class AssignEmployeeToProjectDto
     {
-        public int EmployeeId { get; set; }
-        public int ProjectId { get; set; }
+        public Guid EmployeeId { get; set; }
+        public Guid ProjectId { get; set; }
         public string Role { get; set; } = string.Empty;
     }
 }

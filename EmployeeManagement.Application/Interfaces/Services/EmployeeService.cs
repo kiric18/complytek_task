@@ -34,7 +34,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             });
         }
 
-        public async Task<EmployeeDto> GetByIdAsync(int id)
+        public async Task<EmployeeDto> GetByIdAsync(Guid id)
         {
             var employee = await _unitOfWork.Employees.GetByIdAsync(id);
 
@@ -87,7 +87,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             };
         }
 
-        public async Task UpdateAsync(int id, UpdateEmployeeDto dto)
+        public async Task UpdateAsync(Guid id, UpdateEmployeeDto dto)
         {
             var employee = await _unitOfWork.Employees.GetByIdAsync(id);
 
@@ -110,7 +110,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             var employee = await _unitOfWork.Employees.GetByIdAsync(id);
 
@@ -121,7 +121,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<EmployeeProjectDto>> GetEmployeeProjectsAsync(int id)
+        public async Task<IEnumerable<EmployeeProjectDto>> GetEmployeeProjectsAsync(Guid id)
         {
             if (!await _unitOfWork.Employees.ExistsAsync(id))
                 throw new NotFoundException(nameof(Employee), id);

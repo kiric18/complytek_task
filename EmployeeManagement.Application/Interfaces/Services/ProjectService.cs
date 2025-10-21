@@ -36,7 +36,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             });
         }
 
-        public async Task<ProjectDto> GetByIdAsync(int id)
+        public async Task<ProjectDto> GetByIdAsync(Guid id)
         {
             var project = await _unitOfWork.Projects.GetByIdAsync(id);
 
@@ -102,7 +102,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             }
         }
 
-        public async Task UpdateAsync(int id, UpdateProjectDto dto)
+        public async Task UpdateAsync(Guid id, UpdateProjectDto dto)
         {
             var project = await _unitOfWork.Projects.GetByIdAsync(id);
 
@@ -117,7 +117,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             var project = await _unitOfWork.Projects.GetByIdAsync(id);
 
@@ -150,7 +150,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task RemoveEmployeeAsync(int projectId, int employeeId)
+        public async Task RemoveEmployeeAsync(Guid projectId, Guid employeeId)
         {
             if (!await _unitOfWork.Projects.IsEmployeeAssignedAsync(employeeId, projectId))
                 throw new NotFoundException("Employee assignment to project not found.");

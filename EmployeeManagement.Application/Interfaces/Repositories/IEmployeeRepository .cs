@@ -4,7 +4,7 @@ namespace EmployeeManagement.Application.Interfaces.Repositories
 {
     public interface IEmployeeRepository : IGenericRepository<Employee>
     {
-        Task<bool> EmailExistsAsync(string email, int? excludeId = null);
-        Task<IEnumerable<EmployeeProject>> GetEmployeeProjectsAsync(int employeeId);
+        Task<bool> EmailExistsAsync(string email, Guid? excludeId = null);
+        Task<IEnumerable<EmployeeProject>> GetEmployeeProjectsAsync(Guid employeeId);
     }
 }

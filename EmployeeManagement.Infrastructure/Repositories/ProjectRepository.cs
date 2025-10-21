@@ -16,12 +16,12 @@ namespace EmployeeManagement.Infrastructure.Repositories
             return await _context.Projects.ToListAsync();
         }
 
-        public override async Task<Project?> GetByIdAsync(int id)
+        public override async Task<Project?> GetByIdAsync(Guid id)
         {
             return await _context.Projects.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<bool> IsEmployeeAssignedAsync(int employeeId, int projectId)
+        public async Task<bool> IsEmployeeAssignedAsync(Guid employeeId, Guid projectId)
         {
             return await _context.EmployeeProjects
                 .AnyAsync(ep => ep.EmployeeId == employeeId && ep.ProjectId == projectId);
@@ -32,7 +32,7 @@ namespace EmployeeManagement.Infrastructure.Repositories
             await _context.EmployeeProjects.AddAsync(employeeProject);
         }
 
-        public async Task RemoveEmployeeAsync(int employeeId, int projectId)
+        public async Task RemoveEmployeeAsync(Guid employeeId, Guid projectId)
         {
             var employeeProject = await _context.EmployeeProjects
                 .FirstOrDefaultAsync(ep => ep.EmployeeId == employeeId && ep.ProjectId == projectId);

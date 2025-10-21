@@ -4,8 +4,8 @@ namespace EmployeeManagement.Application.Interfaces.Repositories
 {
     public interface IProjectRepository : IGenericRepository<Project>
     {
-        Task<bool> IsEmployeeAssignedAsync(int employeeId, int projectId);
+        Task<bool> IsEmployeeAssignedAsync(Guid employeeId, Guid projectId);
         Task AssignEmployeeAsync(EmployeeProject employeeProject);
-        Task RemoveEmployeeAsync(int employeeId, int projectId);
+        Task RemoveEmployeeAsync(Guid employeeId, Guid projectId);
     }
 }

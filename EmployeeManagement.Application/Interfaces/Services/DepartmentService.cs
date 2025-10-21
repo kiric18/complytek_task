@@ -25,7 +25,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             });
         }
 
-        public async Task<DepartmentDto> GetByIdAsync(int id)
+        public async Task<DepartmentDto> GetByIdAsync(Guid id)
         {
             var department = await _unitOfWork.Departments.GetByIdAsync(id);
 
@@ -59,7 +59,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             };
         }
 
-        public async Task UpdateAsync(int id, UpdateDepartmentDto dto)
+        public async Task UpdateAsync(Guid id, UpdateDepartmentDto dto)
         {
             var department = await _unitOfWork.Departments.GetByIdAsync(id);
 
@@ -73,7 +73,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             var department = await _unitOfWork.Departments.GetByIdAsync(id);
 
@@ -90,7 +90,7 @@ namespace EmployeeManagement.Application.Interfaces.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<decimal> GetTotalBudgetAsync(int id)
+        public async Task<decimal> GetTotalBudgetAsync(Guid id)
         {
             if (!await _unitOfWork.Departments.ExistsAsync(id))
                 throw new NotFoundException(nameof(Department), id);

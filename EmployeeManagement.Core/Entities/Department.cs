@@ -7,7 +7,7 @@ namespace EmployeeManagement.Core.Entities
     /// </summary>
     public class Department
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(200)]
