@@ -21,7 +21,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddHttpClient<IRandomStringGenerator, RandomStringGenerator>(client =>
 {
     var baseUrl = builder.Configuration["RandomStringApi:BaseUrl"];
-    client.BaseAddress = new Uri("https://api.random.org/");
+    client.BaseAddress = new Uri(baseUrl);
     client.Timeout = TimeSpan.FromSeconds(30);
 });
 
@@ -66,7 +66,40 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
-        context.Database.Migrate();      
+        context.Database.Migrate();
+
+        if (!context.Departments.Any())
+        {
+            var defaultDepartments = new List<Department>
+            {
+                new Department { Name = "Human Resources", OfficeLocation = "Building A" },
+                new Department { Name = "IT Department", OfficeLocation = "Building B" },
+                new Department { Name = "Finance", OfficeLocation = "Building C" },
+                new Department { Name = "Marketing", OfficeLocation = "Building D" },
+                new Department { Name = "Sales", OfficeLocation = "Building E" },
+                new Department { Name = "Customer Support", OfficeLocation = "Building F" },
+                new Department { Name = "Research and Development", OfficeLocation = "Innovation Center" },
+                new Department { Name = "Operations", OfficeLocation = "Building G" },
+                new Department { Name = "Logistics", OfficeLocation = "Warehouse 1" },
+                new Department { Name = "Procurement", OfficeLocation = "Building H" },
+                new Department { Name = "Legal", OfficeLocation = "Building I" },
+                new Department { Name = "Administration", OfficeLocation = "Head Office" },
+                new Department { Name = "Quality Assurance", OfficeLocation = "Building J" },
+                new Department { Name = "Security", OfficeLocation = "Gate Office" },
+                new Department { Name = "Training and Development", OfficeLocation = "Training Center" },
+                new Department { Name = "Public Relations", OfficeLocation = "Building K" },
+                new Department { Name = "Product Management", OfficeLocation = "Building L" },
+                new Department { Name = "Design", OfficeLocation = "Studio 1" },
+                new Department { Name = "Engineering", OfficeLocation = "Tech Park" },
+                new Department { Name = "Data Analytics", OfficeLocation = "Building M" }
+            };
+
+            context.Departments.AddRange(defaultDepartments);
+            context.SaveChanges();
+
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogInformation("Seeded default departments successfully.");
+        }
     }
     catch (Exception ex)
     {
