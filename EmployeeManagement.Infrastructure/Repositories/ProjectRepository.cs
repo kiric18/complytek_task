@@ -13,16 +13,12 @@ namespace EmployeeManagement.Infrastructure.Repositories
 
         public override async Task<IEnumerable<Project>> GetAllAsync()
         {
-            return await _context.Projects
-                .Include(p => p.Department)
-                .ToListAsync();
+            return await _context.Projects.ToListAsync();
         }
 
         public override async Task<Project?> GetByIdAsync(int id)
         {
-            return await _context.Projects
-                .Include(p => p.Department)
-                .FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Projects.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<bool> IsEmployeeAssignedAsync(int employeeId, int projectId)

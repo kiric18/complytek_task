@@ -18,11 +18,7 @@ namespace EmployeeManagement.Core.Entities
 
         [Required]
         [MaxLength(100)]
-        public string Code { get; set; } = null!; // unique project code
-
-        // Department that handles the project (optional)
-        public int? DepartmentId { get; set; }
-        public Department? Department { get; set; }
+        public string ProjectCode { get; set; } = null!; // unique project code
 
         public ICollection<EmployeeProject> EmployeeProjects { get; set; } = new List<EmployeeProject>();
     }

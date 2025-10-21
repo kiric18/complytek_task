@@ -14,8 +14,12 @@ namespace EmployeeManagement.Infrastructure.Repositories
 
         public async Task<decimal> GetTotalBudgetAsync(int departmentId)
         {
-            return await _context.Projects
-                .Where(p => p.DepartmentId == departmentId)
+            return await _context.Departments
+                .Where(d => d.Id == departmentId)
+                .SelectMany(d => d.Employees)
+                .SelectMany(e => e.EmployeeProjects)
+                .Select(ep => ep.Project)
+                .Distinct()
                 .SumAsync(p => p.Budget);
         }
 
@@ -26,7 +30,7 @@ namespace EmployeeManagement.Infrastructure.Repositories
 
         public async Task<bool> HasProjectsAsync(int departmentId)
         {
-            return await _context.Projects.AnyAsync(p => p.DepartmentId == departmentId);
+            return await _context.EmployeeProjects.AnyAsync(p => p.Employee.DepartmentId == departmentId);
         }
     }
 }

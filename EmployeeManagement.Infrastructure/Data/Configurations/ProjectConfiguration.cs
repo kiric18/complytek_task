@@ -19,19 +19,14 @@ namespace EmployeeManagement.Infrastructure.Data.Configurations
                 .IsRequired()
                 .HasMaxLength(100);
 
-            builder.Property(e => e.Code)
+            builder.Property(e => e.ProjectCode)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            builder.HasIndex(e => e.Code).IsUnique();
+            builder.HasIndex(e => e.ProjectCode).IsUnique();
 
             builder.Property(e => e.Budget)
                 .HasColumnType("decimal(18,2)");
-
-            builder.HasOne(p => p.Department)
-                .WithMany(d => d.Projects)
-                .HasForeignKey(p => p.DepartmentId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
