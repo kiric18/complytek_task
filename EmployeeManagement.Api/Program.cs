@@ -1,3 +1,5 @@
+using EmployeeManagement.Api.Filters;
+using EmployeeManagement.Api.Middlewares;
 using EmployeeManagement.Application.Interfaces.Repositories;
 using EmployeeManagement.Application.Interfaces.Services;
 using EmployeeManagement.Core.Entities;
@@ -41,6 +43,7 @@ builder.Services.AddSwaggerGen(
     options =>
     {
         options.SwaggerDoc("v1", new OpenApiInfo { Title = "Employee Management API", Version = "v1" });
+        options.OperationFilter<CustomExceptionResponseFilter>();
     });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -54,6 +57,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
