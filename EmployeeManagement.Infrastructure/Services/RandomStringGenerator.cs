@@ -23,15 +23,25 @@ namespace EmployeeManagement.Infrastructure.Services
 
         public async Task<string> GenerateRandomStringAsync(int length = 8)
         {
+            var prefix = "PRJ-";
+            var suffix = $"-{DateTime.Now.Year}";
             try
             {
                 var requestBody = new
                 {
                     codesToGenerate = 1,
                     onlyUniques = true,
-                    prefix = "PRJ-",
-                    suffix = $"-{DateTime.Now.Year}",
-                    charactersSets = new[] { "\\w", "\\w", "\\w", "\\w", "\\w", "\\w"}
+                    prefix = prefix,
+                    suffix = suffix,
+                    charactersSets = new[] { 
+                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 
+                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 
+                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 
+                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 
+                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+                        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"  }
                 };
 
                 var content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
@@ -40,38 +50,37 @@ namespace EmployeeManagement.Infrastructure.Services
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    _logger.LogWarning("Random.org API returned status code: {StatusCode}", response.StatusCode);
-                    return GenerateFallbackString(length);
+                    _logger.LogWarning("codito.io API returned status code: {StatusCode}", response.StatusCode);
+                    return GenerateFallbackString(length, prefix, suffix);
                 }
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var jsonDoc = JsonDocument.Parse(responseContent);
 
-                if (jsonDoc.RootElement.TryGetProperty("result", out var result) &&
-                    result.TryGetProperty("random", out var random) &&
-                    random.TryGetProperty("data", out var data) &&
-                    data.GetArrayLength() > 0)
+                var deserializedList = JsonSerializer.Deserialize<List<string>>(responseContent);
+                if (deserializedList != null && deserializedList.Any())
                 {
-                    return data[0].GetString() ?? GenerateFallbackString(length);
+                    return deserializedList.FirstOrDefault()!;
                 }
 
-                _logger.LogWarning("Unexpected response format from Random.org API");
-                return GenerateFallbackString(length);
+                _logger.LogWarning("Unexpected response format from codito.io API");
+                return GenerateFallbackString(length, prefix, suffix);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error calling Random.org API");
-                return GenerateFallbackString(length);
+                return GenerateFallbackString(length, prefix, suffix);
             }
         }
 
-        private string GenerateFallbackString(int length)
+        private string GenerateFallbackString(int length, string prefix, string suffix)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var random = new Random();
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)])
-                .ToArray());
+            var randomString = new string(Enumerable.Repeat(chars, length)
+                                    .Select(s => s[random.Next(s.Length)])
+                                    .ToArray());
+
+            return $"{prefix}{randomString}{suffix}";
         }
     }
 }
