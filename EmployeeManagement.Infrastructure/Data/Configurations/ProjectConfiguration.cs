@@ -21,7 +21,7 @@ namespace EmployeeManagement.Infrastructure.Data.Configurations
 
             builder.Property(e => e.ProjectCode)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(100);
 
             builder.HasIndex(e => e.ProjectCode).IsUnique();
 
