@@ -6,7 +6,7 @@ This solution provides a RESTful API to manage **Employees**, **Departments**, a
 
 - Projects receive a unique code from an external `RandomStringGenerator` service.  
 - Transactional creation ensures a project cannot exist without its code.  
-- Docker Compose is provided to run the API and SQL Server locally.  
+- Docker Compose is provided to run the API and SQL Server.  
 
 Follow the instructions below to build and run the application.
 ---
@@ -98,7 +98,7 @@ cd EmployeeManagement.Api
 dotnet run
 ```
 Or from Visual Studio:
-- Set ***EmployeeManagement.Api** as the startup project
+- Set **EmployeeManagement.Api** as the startup project
 - Press F5 (Debug) or Ctrl+F5 (Run)
 - API available at: [http://localhost:5000/swagger](http://localhost:5000/swagger)
 ---
