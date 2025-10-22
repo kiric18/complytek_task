@@ -5,84 +5,118 @@
 This solution provides a RESTful API to manage **Employees**, **Departments**, and **Projects** using **ASP.NET Core (.NET 9)** and **Entity Framework Core (SQL Server)**.  
 
 - Projects receive a unique code from an external `RandomStringGenerator` service.  
-- Transactional creation ensures a project cannot exist without its code (Bonus 1).  
-- Docker Compose is provided to run the API and SQL Server locally (Bonus 2).  
+- Transactional creation ensures a project cannot exist without its code.  
+- Docker Compose is provided to run the API and SQL Server locally.  
 
+Follow the instructions below to build and run the application.
 ---
+
 ## Prerequisites
+Before you start, make sure you have the following installed:
 
-### Option 1: Running Locally
-- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)  
-- SQL Server (2019 or later)
-- Visual Studio 2022
-- `dotnet-ef` tool for migrations:  
+- [Docker Desktop](https://www.docker.com/)
+   - Ensure virtualization is enabled in BIOS/UEFI.
+   - On Windows, WSL 2 backend must be enabled.
+- [Git](https://git-scm.com/)
+- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) (optional for local build without Docker)
+- SQL Server 2022 (optional)
+
+## Project Structure
+```pgsql
+EmployeeManagement.sln
+docker-compose.yml
+Dockerfile
+.env                <-- environment variables (not committed)
+EmployeeManagement.Api/      → ASP.NET Core Web API (entry point)
+  ├── Program.cs
+  ├── appsettings.json
+EmployeeManagement.Application/       → Business logic layer
+EmployeeManagement.Infrastructure/      → Database and data access
+EmployeeManagement.Core/      → Domain entities and shared models
+```
+---
+## Environment Variables
+Create a .env file and add the values below as needed (which Docker Compose supports automatically)
 ```bash
-dotnet tool install --global dotnet-ef
+A_PASSWORD=YourStrong@Passw0rd
+ASPNETCORE_ENVIRONMENT=Development
 ```
-
-### Option 2: Running with Docker
-- [Docker](https://www.docker.com/)
-- Docker Compose
-
-## Installation & Setup
-
-### Option 1: Local Development
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/kiric18/complytek_task.git
-```
-
-2. **Restore NuGet packages**
-```bash
-dotnet restore
-```
-
-3. **Update Connection String**
-   Edit `EmployeeManagement.Api/appsettings.json`:
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=CompanyManagementDb;Trusted_Connection=True;TrustServerCertificate=True;"
-  }
-}
-```
-4. **Database**
-   - When the EmployeeManagement.Api runs, the database will be created automatically if it does not exist, and initial records will be added to the Departments table.
-
-6. **Run the Application**
-   - 
-```bash
-dotnet run --project EmployeeManagement.Api
-```
-
-6. **Access Swagger UI**
-Navigate to: `https://localhost:5001/swagger`
-
-### Option 2: Docker Deployment
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/kiric18/complytek_task.git
-```
-
-2. **Build and Run with Docker Compose**
-```bash
-docker-compose up --build
-```
-
-3. **Access the API**
-- Swagger UI: `http://localhost:5000/swagger`
-- API Base URL: `http://localhost:5000/api`
-
-4. **Stop the containers**
-```bash
-docker-compose down
-```
-
-From the repository root, run:
+---
+## Run the Application with Docker
+### 1. Build and start all services
+From the solution root (same folder as docker-compose.yml):
 ```bash
 docker compose up --build
 ```
-- SQL Server will be available at Server=db,1433 for the API.
-- The API container will build and run; check logs for the listening URL.
+This will:
+- Pull the official SQL Server image.
+- Build your Employee Management API image using its Dockerfile.
+- Start both containers and create a shared network.
+  
+### 2. Verify it’s running
+Once started:
+- API available at: [http://localhost:5000/swagger](http://localhost:5000/swagger)
+- SQL Server accessible at: localhost,1433 (user: sa, password from .env)
+
+### 3. Stop the containers
+To stop and remove containers, run:
+```bash
+docker compose down
+```
+To stop but keep data volumes:
+```bash
+docker compose down --volumes=false
+```
+
+### 4. View logs (useful for debugging)
+```bash
+docker compose logs -f
+```
+Or view logs for a specific service:
+```bash
+docker compose logs api
+```
+---
+## Run the Application Locally
+### 1. Setup SQL Server
+- Use LocalDB, SQL Server Express, or a remote SQL instance.
+- The database will be created automatically if it does not exist when the **EmployeeManagement.Api** will be run, and initial records will be added to the Departments table.
+
+### 2. Update `appsettings.Development.json`
+In `EmployeeManagement.Api`:
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=EmployeeManagementDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+  }
+}
+```
+### 3. Run the API
+Using the CLI:
+```bash
+cd EmployeeManagement.Api
+dotnet run
+```
+Or from Visual Studio:
+- Set ***EmployeeManagement.Api** as the startup project
+- Press F5 (Debug) or Ctrl+F5 (Run)
+- API available at: [http://localhost:5000/swagger](http://localhost:5000/swagger)
+---
+## Common Docker Issues
+| Problem                         | Fix                                                                                                            |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| **Virtualization not detected** | Enable virtualization in BIOS or Windows Features (`Windows Subsystem for Linux` + `Virtual Machine Platform`) |
+| **SQL Server fails to start**   | Ensure `SA_PASSWORD` meets SQL complexity rules                                                                |
+| **ERR_EMPTY_RESPONSE**          | Wait a few seconds after SQL container starts (API depends on DB health check)                                 |
+| **Dockerfile not found**        | Verify `Dockerfile` in `docker-compose.yml` and run from the solution root                                     |
+---
+## Useful Commands
+| Command                                       | Description                |
+| --------------------------------------------- | -------------------------- |
+| `docker compose up --build`                   | Build and run containers   |
+| `docker compose down`                         | Stop and remove containers |
+| `docker ps`                                   | List running containers    |
+| `docker exec -it company-sqlserver /bin/bash` | Enter SQL Server container |
+| `dotnet build`                                | Build the solution locally |
+| `dotnet run --project EmployeeManagement.Api` | Run API locally            |
+
